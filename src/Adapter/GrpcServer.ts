@@ -3,7 +3,7 @@ import chalk from "chalk";
 import grpc = require("grpc");
 const log = console.log;
 
-declare interface IBrickRpcServerConfig {
+export interface IBrickRpcServerConfig {
   host?: string;
   port: number;
   protoPath: string;

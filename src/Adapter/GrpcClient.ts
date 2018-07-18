@@ -5,7 +5,7 @@ const grpcPromise = require("grpc-promise");
 import chalk from "chalk";
 const log = console.log;
 
-declare interface IBrickRpcClientConfig {
+export interface IBrickRpcClientConfig {
   protoPath: string;
   host?: string;
   port: number;
