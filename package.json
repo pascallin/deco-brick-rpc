@@ -1,0 +1,27 @@
+{
+  "name": "deco-brick-rpc",
+  "version": "0.1.0",
+  "description": "a decorator style rpc micro-service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pascallin/deco-brick-rpc.git"
+  },
+  "author": "pascal_lin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pascallin/deco-brick-rpc/issues"
+  },
+  "homepage": "https://github.com/pascallin/deco-brick-rpc#readme",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.3.0",
+    "chalk": "^2.4.1",
+    "grpc": "^1.13.0",
+    "grpc-promise": "^1.1.0",
+    "protobufjs": "^6.8.6",
+    "thrift": "^0.11.0"
+  }
+}
