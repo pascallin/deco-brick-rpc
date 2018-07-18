@@ -1,5 +1,5 @@
 # deco-brick-ms
-decorator style rpc micro-service
+rpc micro-service for typescript
 
 ## Concept
 Only `grpc` is avaliable now.
