@@ -1,4 +1,4 @@
-import { GrpcServer, IBrickService } from "../index";
+import { GrpcServer, IBrickService } from "..";
 
 class TestService implements IBrickService {
   public name: string =  "Test";

@@ -1,4 +1,4 @@
-import { GrpcClient } from "../index";
+import { GrpcClient } from "..";
 const log = console.log;
 
 const rpc = new GrpcClient({

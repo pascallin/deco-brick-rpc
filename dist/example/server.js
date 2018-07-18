@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../index");
+const __1 = require("..");
 class TestService {
     constructor() {
         this.name = "Test";
@@ -19,7 +19,7 @@ class TestService {
         });
     }
 }
-const test = new index_1.GrpcServer({
+const test = new __1.GrpcServer({
     port: 50051,
     protoPath: __dirname + "/test.proto",
 });

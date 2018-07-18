@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../index");
+const __1 = require("..");
 const log = console.log;
-const rpc = new index_1.GrpcClient({
+const rpc = new __1.GrpcClient({
     host: "localhost",
     port: 50051,
     protoPath: __dirname + "/test.proto",
