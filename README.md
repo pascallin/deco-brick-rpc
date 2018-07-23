@@ -96,7 +96,7 @@ You can use etcd as a discovery centre for multiple application.
 ```
 {
   namespace: NAMESPACE,
-  url: etcd url         // e.g. "localhost:2379"
+  url: ETCD_URL // e.g. "localhost:2379"
 }
 ```
 
