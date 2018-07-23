@@ -2,14 +2,17 @@ export interface IBrickRpcServerConfig {
     host?: string;
     port: number;
     protoPath: string;
+    discovery?: any;
 }
 export declare class GrpcServer {
     protected Services: any[];
     protected server: any;
+    private packageName;
     private host;
     private port;
     private protoPath;
     private protos;
+    private discovery?;
     constructor(config: IBrickRpcServerConfig);
     setServices(services: any[]): void;
     start(): void;

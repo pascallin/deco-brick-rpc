@@ -8,7 +8,7 @@ export declare class GrpcClient {
         [key: string]: any;
     };
     packageName: string;
-    private host;
+    private host?;
     private port;
     private protoPath;
     private protos;

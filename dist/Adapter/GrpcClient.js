@@ -7,8 +7,7 @@ const protoLoader = require("@grpc/proto-loader");
 const grpc = require("grpc");
 // tslint:disable-next-line:no-var-requires
 const grpcPromise = require("grpc-promise");
-const chalk_1 = __importDefault(require("chalk"));
-const log = console.log;
+const log_1 = __importDefault(require("../utils/log"));
 class GrpcClient {
     constructor(config) {
         this.client = {};
@@ -39,15 +38,13 @@ class GrpcClient {
     loadServices() {
         for (const i in this.protos) {
             if (this.protos[i]) {
-                // this.client[i] = {};
                 this.packageName = i;
                 for (const serviceName in this.protos[i]) {
                     if (this.protos[i][serviceName]) {
                         const client = new this.protos[i][serviceName](`${this.host}:${this.port}`, grpc.credentials.createInsecure());
                         grpcPromise.promisifyAll(client);
-                        // this.client[i][serviceName] = client;
                         this.client[serviceName] = client;
-                        log(chalk_1.default.blue(`[BrickGrpcClient] Loaded grpc client ${this.packageName}`));
+                        log_1.default("BrickGrpcClient").blue(`Loaded grpc client ${this.packageName}`);
                     }
                 }
             }

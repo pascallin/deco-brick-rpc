@@ -4,16 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const protoLoader = require("@grpc/proto-loader");
-const chalk_1 = __importDefault(require("chalk"));
+// import EventEmitter from "events";
 const grpc = require("grpc");
-const log = console.log;
+const log_1 = __importDefault(require("../utils/log"));
 class GrpcServer {
     constructor(config) {
         this.Services = [];
         this.server = new grpc.Server();
+        this.packageName = "";
         this.host = "0.0.0.0";
         if (config.host) {
             this.host = config.host;
+        }
+        if (config.discovery) {
+            this.discovery = config.discovery;
         }
         this.port = config.port;
         this.protoPath = config.protoPath;
@@ -49,9 +53,10 @@ class GrpcServer {
         const service = new Service();
         for (const i in this.protos) {
             if (this.protos[i]) {
+                this.packageName = i;
                 const services = this.protos[i];
                 if (!services[service.name]) {
-                    log(chalk_1.default.red(`[BrickGrpcServer] proto file does not exist service: ${service.name}`));
+                    log_1.default("BrickGrpcServer").red(`proto file does not exist service: ${service.name}`);
                 }
                 if (services[service.name]) {
                     const methods = services[service.name].service;
@@ -61,7 +66,7 @@ class GrpcServer {
                             serviceObj[method] = this.wrapService(service[method]);
                         }
                     }
-                    log(chalk_1.default.blue(`[BrickGrpcServer] loaded service: ${service.name}`));
+                    log_1.default("BrickGrpcServer").blue(`loaded service: ${service.name}`);
                     this.server.addService(methods, serviceObj);
                 }
             }
@@ -78,6 +83,9 @@ class GrpcServer {
     }
     listen() {
         this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+        if (this.discovery) {
+            this.discovery.register(this.packageName, `${this.host}:${this.port}`);
+        }
         this.server.start();
     }
 }

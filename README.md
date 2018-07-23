@@ -1,10 +1,10 @@
 # deco-brick-ms
-rpc micro-service for typescript
+rpc micro-service framework for typescript
 
 ## Concept
 Only `grpc` is avaliable now.
 
-There are `GrpcServer`，`GrpcClient`，`IBrickService` for useage.
+There are `GrpcServer`，`GrpcClient`，`IBrickService`，`EtcdDiscovery`  for useage.
 
 ## GrpcServer
 ### server config 
@@ -89,6 +89,67 @@ interface IBrickService {
 }
 ```
 
+## EtcdDiscovery
+You can use etcd as a discovery centre for multiple application.
+
+### discovery config
+```
+{
+  namespace: NAMESPACE,
+  url: etcd url         // e.g. "localhost:2379"
+}
+```
+
+### server usage
+```
+import { EtcdDiscovery, GrpcServer, IBrickService } from "deco-brick-rpc";
+
+class TestService implements IBrickService {
+  public name: string =  "Test";
+  public async check(params: any): Promise<object> {
+    return { status: "server 1 success" };
+  }
+}
+
+const test = new GrpcServer({
+  discovery: new EtcdDiscovery({
+    namespace: "deco",
+    url: "localhost:2379",
+  }),
+  port: 50051,
+  protoPath: __dirname + "/../test.proto",
+});
+test.setServices([ TestService ]);
+test.start();
+```
+
+### client usage
+```
+import { EtcdDiscovery, GrpcClient } from "deco-brick-rpc";
+const log = console.log;
+
+const discovery = new EtcdDiscovery({
+  namespace: "deco",
+  url: "localhost:2379",
+});
+const { host, port } = discovery.discover("test");
+log(host, port);
+const rpc = new GrpcClient({
+  host,
+  port,
+  protoPath: __dirname + "/../test.proto",
+});
+rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
+  log(data);
+}).catch((e: any) => {
+  log(e.message);
+});
+
+```
+
+# examples
+- [simple](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/simple)
+- [multiple with etcd](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/multiple)
+
 # TODO
 - thrift support
-- etcd support
