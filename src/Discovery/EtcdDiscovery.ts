@@ -19,16 +19,16 @@ export class EtcdDiscovery implements IDiscovery {
   public register(name: string, uri: string): void {
     const path = this.getPath(name);
     // format: { uri: [ 'host:port' ] }
-    let newData: string = JSON.stringify({uri: [uri]});
+    let newData = {uri: [uri]};
     // push uri to the exist service array
     const res = this.etcd.getSync(path);
     if (!res.err) {
       const oldData = JSON.parse(res.body.node.value);
       oldData.uri.push(uri);
-      newData = JSON.stringify(oldData);
+      newData = oldData;
     }
     // set etcd key-value
-    this.etcd.setSync(path, newData);
+    this.etcd.setSync(path, JSON.stringify(newData));
     log("EtcdDiscovery").blue(`${name} registered`);
     this.onExit(name, uri);
   }
@@ -61,13 +61,20 @@ export class EtcdDiscovery implements IDiscovery {
     try {
       data = JSON.parse(service.body.node.value).uri;
     } catch (e) {
-      log("EtcdDiscovery").red(`${name} discovery data error: ${service}`);
+      log("EtcdDiscovery").red(`${name} discovery parse data error: ${service}`);
       throw e;
     }
-    const uri = data[_.random(0, data.length - 1)];
+    const uri = this.pickHost(data);
     return { host: uri.split(":")[0], port: parseInt(uri.split(":")[1], 10) };
   }
+  public watch(name: string, call: (data: {[key: string]: any}) => void): void {
+    const watcher = this.etcd.watcher(this.getPath(name));
+    watcher.on("change", call);
+  }
 
+  protected pickHost(hosts: string[]): string {
+    return hosts[_.random(0, hosts.length - 1)];
+  }
   private getPath(name: string): string {
     this.etcd.mkdirSync(this.namespace);
     return `${this.namespace}/${name}`;

@@ -8,7 +8,7 @@ export interface IBrickRpcServerConfig {
   host?: string;
   port: number;
   protoPath: string;
-  discovery?: any;
+  discovery?: IDiscovery;
 }
 
 export class GrpcServer {

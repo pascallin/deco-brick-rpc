@@ -1,19 +1,19 @@
 import { EtcdDiscovery, GrpcClient } from "../../";
 const log = console.log;
+import koa from "koa";
 
-const discovery = new EtcdDiscovery({
-  namespace: "deco",
-  url: "localhost:2379",
-});
-const { host, port } = discovery.discover("test");
-log(host, port);
 const rpc = new GrpcClient({
-  host,
-  port,
+  discovery: new EtcdDiscovery({
+    namespace: "deco",
+    url: "localhost:2379",
+  }),
   protoPath: __dirname + "/../test.proto",
 });
-rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
-  log(data);
-}).catch((e: any) => {
-  log(e.message);
+
+const app = new koa();
+
+app.use(async (ctx: any) => {
+    ctx.body = await rpc.rpc().Test.check().sendMessage({data: "you"});
 });
+
+app.listen(3000);

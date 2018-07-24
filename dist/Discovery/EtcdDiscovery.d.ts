@@ -9,6 +9,10 @@ export declare class EtcdDiscovery implements IDiscovery {
     discover(name: string): {
         [key: string]: any;
     };
+    watch(name: string, call: (data: {
+        [key: string]: any;
+    }) => void): void;
+    protected pickHost(hosts: string[]): string;
     private getPath(name);
     private onExit(name, uri);
 }

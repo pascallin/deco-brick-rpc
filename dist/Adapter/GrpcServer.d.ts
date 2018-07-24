@@ -1,8 +1,9 @@
+import { IDiscovery } from "../Discovery/DiscoveryInterface";
 export interface IBrickRpcServerConfig {
     host?: string;
     port: number;
     protoPath: string;
-    discovery?: any;
+    discovery?: IDiscovery;
 }
 export declare class GrpcServer {
     protected Services: any[];

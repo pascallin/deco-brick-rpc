@@ -16,16 +16,16 @@ class EtcdDiscovery {
     register(name, uri) {
         const path = this.getPath(name);
         // format: { uri: [ 'host:port' ] }
-        let newData = JSON.stringify({ uri: [uri] });
+        let newData = { uri: [uri] };
         // push uri to the exist service array
         const res = this.etcd.getSync(path);
         if (!res.err) {
             const oldData = JSON.parse(res.body.node.value);
             oldData.uri.push(uri);
-            newData = JSON.stringify(oldData);
+            newData = oldData;
         }
         // set etcd key-value
-        this.etcd.setSync(path, newData);
+        this.etcd.setSync(path, JSON.stringify(newData));
         log_1.default("EtcdDiscovery").blue(`${name} registered`);
         this.onExit(name, uri);
     }
@@ -59,11 +59,18 @@ class EtcdDiscovery {
             data = JSON.parse(service.body.node.value).uri;
         }
         catch (e) {
-            log_1.default("EtcdDiscovery").red(`${name} discovery data error: ${service}`);
+            log_1.default("EtcdDiscovery").red(`${name} discovery parse data error: ${service}`);
             throw e;
         }
-        const uri = data[lodash_1.default.random(0, data.length - 1)];
+        const uri = this.pickHost(data);
         return { host: uri.split(":")[0], port: parseInt(uri.split(":")[1], 10) };
+    }
+    watch(name, call) {
+        const watcher = this.etcd.watcher(this.getPath(name));
+        watcher.on("change", call);
+    }
+    pickHost(hosts) {
+        return hosts[lodash_1.default.random(0, hosts.length - 1)];
     }
     getPath(name) {
         this.etcd.mkdirSync(this.namespace);
