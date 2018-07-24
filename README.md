@@ -57,7 +57,7 @@ Client share the same protobuf file as server.
 ```
 {
   protoPath: PROTOPATH,
-  host: HOST, // optional, default is 'localhost'
+  host: HOST,
   port: PORT
 }
 ```
@@ -149,4 +149,5 @@ rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
 - [multiple with etcd](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/multiple)
 
 # TODO
+- etcd watch
 - thrift support
