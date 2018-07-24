@@ -20,8 +20,22 @@ class TestService {
     }
 }
 const test = new __1.GrpcServer({
+    discovery: new __1.EtcdDiscovery({
+        namespace: "deco",
+        url: "localhost:2379",
+    }),
     port: 50051,
-    protoPath: __dirname + "/test.proto",
+    protoPath: __dirname + "/../test.proto",
 });
 test.setServices([TestService]);
 test.start();
+const test2 = new __1.GrpcServer({
+    discovery: new __1.EtcdDiscovery({
+        namespace: "deco",
+        url: "localhost:2379",
+    }),
+    port: 50052,
+    protoPath: __dirname + "/test.proto",
+});
+test2.setServices([TestService]);
+test2.start();
