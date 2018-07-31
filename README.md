@@ -1,5 +1,5 @@
 # deco-brick-ms
-rpc micro-service framework for typescript
+A simple、quick-start rpc micro-service framework
 
 ## Concept
 Only `grpc` is avaliable now.
@@ -10,14 +10,15 @@ There are `GrpcServer`，`GrpcClient`，`IBrickService`，`EtcdDiscovery`  for u
 ### server config 
 ```
 {
-  host: HOST, // optional, default is '0.0.0.0'
+  host: HOST
   port: PORT,
   protoPath: PROTOPATH,
+  discovery: // optional, a EtcdDiscovery class object
 }
 ```
 ### server usage
 
-The protobuf file example as below:
+#### protobuf file example as below:
 ```
 syntax = "proto3";
 package test;
@@ -31,7 +32,8 @@ message res {
 	string status = 1;
 }
 ```
-Create a server
+#### Create a server
+**typescript** code: 
 ```
 import { GrpcServer, IBrickService } from "deco-brick-rpc";
 
@@ -50,6 +52,25 @@ test.setServices([ TestService ]);
 test.start();
 ```
 
+**javascript** code:
+```
+const brick = require('deco-brick-rpc')
+class TestService {
+  constructor() {
+    this.name = 'Test'
+  }
+  async check(params) {
+    return { status: "success" };
+  }
+}
+const app = new brick.GrpcServer({
+    port: 50051,
+    protoPath: __dirname + "/test.proto",
+})
+app.setServices([ TestService ])
+app.start()
+```
+
 ## GrpcClient
 Client share the same protobuf file as server.
 
@@ -57,12 +78,14 @@ Client share the same protobuf file as server.
 ```
 {
   protoPath: PROTOPATH,
-  host: HOST,
-  port: PORT
+  host: HOST, // optional when using discovery
+  port: PORT, // optional when using discovery
+  discovery: // optional, a EtcdDiscovery class object
 }
 ```
 ### client usage
 Here is a client demo
+**typescript** code:
 ```
 import { GrpcClient } from "deco-brick-rpc";
 const log = console.log;
@@ -80,9 +103,26 @@ rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
   log(e.message);
 });
 ```
+**javascript** code:
+```
+const brick = require('deco-brick-rpc')
+const log = console.log;
 
+const rpc = new brick.GrpcClient({
+  port: 50051,
+  protoPath: __dirname + "/test.proto",
+});
+
+log("package name: ", rpc.packageName);
+
+rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
+  log(data);
+}).catch((e: any) => {
+  log(e.message);
+});
+```
 ## IBrickService
-The service interface is for standardization.
+The service interface is for standardization for typescript.
 ```
 interface IBrickService {
   name: string;
@@ -101,6 +141,7 @@ You can use etcd as a discovery centre for multiple application.
 ```
 
 ### server usage
+**typescript** code:
 ```
 import { EtcdDiscovery, GrpcServer, IBrickService } from "deco-brick-rpc";
 
@@ -124,6 +165,7 @@ test.start();
 ```
 
 ### client usage
+**typescript** code:
 ```
 import { EtcdDiscovery, GrpcClient } from "deco-brick-rpc";
 const log = console.log;
