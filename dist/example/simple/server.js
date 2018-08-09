@@ -21,7 +21,7 @@ class TestService {
 }
 const test = new __1.GrpcServer({
     port: 50051,
-    protoPath: __dirname + "/../test.proto",
+    protoPath: __dirname + "/../protos/test.proto",
 });
 test.setServices([TestService]);
 test.start();

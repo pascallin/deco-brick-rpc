@@ -5,7 +5,7 @@ const log = console.log;
 const rpc = new __1.GrpcClient({
     host: "localhost",
     port: 50051,
-    protoPath: __dirname + "/../test.proto",
+    protoPath: __dirname + "/../protos/test.proto",
 });
 log("package name: ", rpc.packageName);
 rpc.client.Test.check().sendMessage({ data: "you" }).then((data) => {
