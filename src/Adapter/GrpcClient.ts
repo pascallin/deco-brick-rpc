@@ -31,6 +31,7 @@ export class GrpcClient {
       this.discoveryReload();
       const self = this;
       /**
+       * TODO:
        * There is a BUG here.
        * Assertion failed:
        *  (handle->type == UV_TCP || handle->type == UV_TTY || handle->type == UV_NAMED_PIPE),
@@ -90,13 +91,13 @@ export class GrpcClient {
   }
 
   private loadServices() {
-    // clean client
-    for (const i in this.client) {
-      if (this.client[i]) {
-        this.client[i].close();
-        delete this.client[i];
-      }
-    }
+    // TODO: clean client for discovery
+    // for (const i in this.client) {
+    //   if (this.client[i]) {
+    //     this.client[i].close();
+    //     delete this.client[i];
+    //   }
+    // }
     for (const i in this.protos) {
       if (this.protos[i]) {
         for (const serviceName in this.protos[i]) {
@@ -107,7 +108,7 @@ export class GrpcClient {
             this.client[serviceName] = client;
           }
         }
-        log("BrickGrpcClient").blue(`Loaded grpc client ${this.packageName}`);
+        log("BrickGrpcClient").blue(`Loaded grpc client: ${this.packageName}`);
       }
     }
   }
