@@ -188,7 +188,9 @@ rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
 ```
 
 ## ClientConatiner
-rpc client will depend on several rpc server usally, use `ClientConatiner` for that.
+rpc client will depend on several rpc server usally, use `ClientConatiner` for that. 
+
+auto-select rpc type by the suffix of protofile, support grpc only for now.
 
 **typescript** code
 ```
