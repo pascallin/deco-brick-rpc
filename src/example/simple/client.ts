@@ -4,7 +4,7 @@ const log = console.log;
 const rpc = new GrpcClient({
   host: "localhost",
   port: 50051,
-  protoPath: __dirname + "/../test.proto",
+  protoPath: __dirname + "/../protos/test.proto",
 });
 
 log("package name: ", rpc.packageName);

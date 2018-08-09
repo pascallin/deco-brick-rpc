@@ -13,7 +13,7 @@ const test = new GrpcServer({
     url: "localhost:2379",
   }),
   port: 50052,
-  protoPath: __dirname + "/../test.proto",
+  protoPath: __dirname + "/../protos/test.proto",
 });
 test.setServices([ TestService ]);
 test.start();

@@ -7,7 +7,7 @@ const rpc = new GrpcClient({
     namespace: "deco",
     url: "localhost:2379",
   }),
-  protoPath: __dirname + "/../test.proto",
+  protoPath: __dirname + "/../protos/test.proto",
 });
 
 const app = new koa();
