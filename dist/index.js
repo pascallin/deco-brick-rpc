@@ -6,3 +6,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./core/Server"));
 __export(require("./core/Client"));
 __export(require("./core/Discovery"));
+__export(require("./core/ClientConatiner"));

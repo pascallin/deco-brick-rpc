@@ -1,6 +1,6 @@
 {
   "name": "deco-brick-rpc",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "a decorator style rpc micro-service",
   "main": "index.js",
   "scripts": {

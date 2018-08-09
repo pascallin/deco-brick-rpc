@@ -25,7 +25,7 @@ const test = new _1.GrpcServer({
         url: "localhost:2379",
     }),
     port: 50051,
-    protoPath: __dirname + "/../test.proto",
+    protoPath: __dirname + "/../protos/test.proto",
 });
 test.setServices([TestService]);
 test.start();

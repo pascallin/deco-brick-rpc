@@ -6,14 +6,12 @@ const discovery = new _1.EtcdDiscovery({
     namespace: "deco",
     url: "localhost:2379",
 });
-const { host, port } = discovery.discover("test");
-log(host, port);
-const rpc = new _1.GrpcClient({
-    host,
-    port,
-    protoPath: __dirname + "/..",
+const rpc = new _1.ClientConatiner({
+    discovery,
+    protoDirPath: __dirname + "/../protos",
 });
-rpc.client.Test.check().sendMessage({ data: "you" }).then((data) => {
+// 'test' is the package name in protofile
+rpc.clients.test.Test.check().sendMessage({ data: "you" }).then((data) => {
     log(data);
 }).catch((e) => {
     log(e.message);

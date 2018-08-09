@@ -19,7 +19,7 @@ const rpc = new _1.GrpcClient({
         namespace: "deco",
         url: "localhost:2379",
     }),
-    protoPath: __dirname + "/../test.proto",
+    protoPath: __dirname + "/../protos/test.proto",
 });
 const app = new koa_1.default();
 app.use((ctx) => __awaiter(this, void 0, void 0, function* () {

@@ -87,6 +87,7 @@ class GrpcServer {
             this.discovery.register(this.packageName, `${this.host}:${this.port}`);
         }
         this.server.start();
+        log_1.default("BrickGrpcServer").blue(`listening ${this.port}`);
     }
 }
 exports.GrpcServer = GrpcServer;

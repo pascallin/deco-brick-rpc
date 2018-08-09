@@ -1,10 +1,10 @@
-# deco-brick-ms
+# deco-brick-rpc
 A simple、quick-start rpc micro-service framework
 
 ## Concept
 Only `grpc` is avaliable now.
 
-There are `GrpcServer`，`GrpcClient`，`IBrickService`，`EtcdDiscovery`  for useage.
+There are `GrpcServer`，`IBrickService`，`GrpcClient`，`EtcdDiscovery`，`ClientConatiner`  for useage.
 
 ## GrpcServer
 ### server config 
@@ -71,6 +71,14 @@ app.setServices([ TestService ])
 app.start()
 ```
 
+## IBrickService
+The service interface is for standardization, only used in typescript.
+```
+interface IBrickService {
+  name: string;
+}
+```
+
 ## GrpcClient
 Client share the same protobuf file as server.
 
@@ -120,13 +128,6 @@ rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
 }).catch((e: any) => {
   log(e.message);
 });
-```
-## IBrickService
-The service interface is for standardization for typescript.
-```
-interface IBrickService {
-  name: string;
-}
 ```
 
 ## EtcdDiscovery
@@ -186,9 +187,37 @@ rpc.client.Test.check().sendMessage({data: "you"}).then((data: any) => {
 
 ```
 
+## ClientConatiner
+rpc client will depend on several rpc server usally, use `ClientConatiner` for that. 
+
+auto-select rpc type by the suffix of protofile, support grpc only for now.
+
+**typescript** code
+```
+import { ClientConatiner, EtcdDiscovery } from "deco-brick-rpc";
+const log = console.log;
+
+const discovery = new EtcdDiscovery({
+  namespace: "deco",
+  url: "localhost:2379",
+});
+const rpc = new ClientConatiner({
+  discovery,
+  protoDirPath: __dirname + "/../protos",
+});
+// 'test' is the package name in protofile
+rpc.clients.test.Test.check().sendMessage({data: "you"}).then((data: any) => {
+  log(data);
+}).catch((e: any) => {
+  log(e.message);
+});
+
+```
+
 # examples
 - [simple](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/simple)
 - [multiple with etcd](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/multiple)
+- [client container](https://github.com/pascallin/deco-brick-rpc/tree/dev/src/example/container)
 
 # TODO
 - etcd watch
