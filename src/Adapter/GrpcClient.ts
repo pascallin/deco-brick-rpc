@@ -2,7 +2,6 @@
 import protoLoader = require("@grpc/proto-loader");
 
 import grpc = require("grpc");
-// tslint:disable-next-line:no-var-requires
 const grpcPromise = require("grpc-promise");
 import { IDiscovery } from "../Discovery/DiscoveryInterface";
 import log from "../utils/log";
