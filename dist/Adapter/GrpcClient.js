@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // import { loadPackageDefinition } from "@grpc/grpc-js";
 const protoLoader = require("@grpc/proto-loader");
 const grpc = require("grpc");
-// tslint:disable-next-line:no-var-requires
 const grpcPromise = require("grpc-promise");
 const log_1 = __importDefault(require("../utils/log"));
 class GrpcClient {
