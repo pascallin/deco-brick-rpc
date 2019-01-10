@@ -77,6 +77,8 @@ class GrpcServer {
             const result = fn(call.request).then((data) => {
                 callback(null, data);
             }).catch((e) => {
+                // tslint:disable-next-line:no-console
+                console.error(e.stack);
                 callback(e);
             });
         };

@@ -11,11 +11,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../../");
+const __1 = require("../../");
 const log = console.log;
 const koa_1 = __importDefault(require("koa"));
-const rpc = new _1.GrpcClient({
-    discovery: new _1.EtcdDiscovery({
+const rpc = new __1.GrpcClient({
+    discovery: new __1.EtcdDiscovery({
         namespace: "deco",
         url: "localhost:2379",
     }),

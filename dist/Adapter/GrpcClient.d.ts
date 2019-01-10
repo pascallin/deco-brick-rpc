@@ -20,6 +20,6 @@ export declare class GrpcClient {
     rpc(): any;
     loadProto(): void;
     discoveryReload(): void;
-    private loadPackageName();
-    private loadServices();
+    private loadPackageName;
+    private loadServices;
 }

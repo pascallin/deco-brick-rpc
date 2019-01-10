@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../../");
+const __1 = require("../../");
 const log = console.log;
-const discovery = new _1.EtcdDiscovery({
+const discovery = new __1.EtcdDiscovery({
     namespace: "deco",
     url: "localhost:2379",
 });
-const rpc = new _1.ClientConatiner({
+const rpc = new __1.ClientConatiner({
     discovery,
     protoDirPath: __dirname + "/../protos",
 });

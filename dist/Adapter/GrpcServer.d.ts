@@ -17,9 +17,9 @@ export declare class GrpcServer {
     constructor(config: IBrickRpcServerConfig);
     setServices(services: any[]): void;
     start(): void;
-    private loadProto();
-    private loadServices();
-    private loadService(Service);
-    private wrapService(fn);
-    private listen();
+    private loadProto;
+    private loadServices;
+    private loadService;
+    private wrapService;
+    private listen;
 }

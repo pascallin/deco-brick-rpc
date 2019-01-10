@@ -92,6 +92,8 @@ export class GrpcServer {
       const result = fn(call.request).then((data: any) => {
         callback(null, data);
       }).catch((e: any) => {
+        // tslint:disable-next-line:no-console
+        console.error(e.stack);
         callback(e);
       });
     };

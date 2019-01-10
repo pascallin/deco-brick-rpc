@@ -13,6 +13,6 @@ export declare class EtcdDiscovery implements IDiscovery {
         [key: string]: any;
     }) => void): void;
     protected pickHost(hosts: string[]): string;
-    private getPath(name);
-    private onExit(name, uri);
+    private getPath;
+    private onExit;
 }
