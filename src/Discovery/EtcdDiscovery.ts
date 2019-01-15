@@ -2,6 +2,10 @@ import _ from "lodash";
 import log from "../utils/log";
 import { IDiscovery, IDiscoveryConfig } from "./DiscoveryInterface";
 
+interface IDataFormat {
+  uri: string[];
+}
+
 // tslint:disable-next-line:no-var-requires
 const Etcd = require("node-etcd");
 
@@ -19,13 +23,15 @@ export class EtcdDiscovery implements IDiscovery {
   public register(name: string, uri: string): void {
     const path = this.getPath(name);
     // format: { uri: [ 'host:port' ] }
-    let newData = {uri: [uri]};
+    const newData: IDataFormat = { uri: [uri] };
     // push uri to the exist service array
     const res = this.etcd.getSync(path);
     if (!res.err) {
-      const oldData = JSON.parse(res.body.node.value);
+      const oldData: IDataFormat = JSON.parse(res.body.node.value);
       oldData.uri.push(uri);
-      newData = oldData;
+      // unique array
+      newData.uri =
+        oldData.uri.reduce((prev: string[], curr: string) => prev.indexOf(curr) > -1 ? prev : [...prev, curr], []);
     }
     // set etcd key-value
     this.etcd.setSync(path, JSON.stringify(newData));
@@ -36,20 +42,14 @@ export class EtcdDiscovery implements IDiscovery {
     const path = this.getPath(name);
     const res = this.etcd.getSync(path);
     if (!res.err) {
-      const oldData = JSON.parse(res.body.node.value);
+      const oldData: IDataFormat = JSON.parse(res.body.node.value);
       if (oldData.uri.length === 1) {
         this.etcd.delSync(path);
         log("EtcdDiscovery").red(`${name} unregistered`);
       } else {
-        const newData = [];
-        for (const i in oldData.uri) {
-          if (oldData.uri[i]) {
-            if (oldData.uri[i] !== uri) {
-              newData.push(oldData.uri[i]);
-            }
-          }
-        }
-        this.etcd.setSync(path, JSON.stringify({uri: newData}));
+        const newData: IDataFormat = { uri: [] };
+        newData.uri = oldData.uri.filter((v: string) => v !== uri);
+        this.etcd.setSync(path, JSON.stringify(newData));
         log("EtcdDiscovery").red(`${name} unregistered`);
       }
     }
@@ -73,6 +73,7 @@ export class EtcdDiscovery implements IDiscovery {
   }
 
   protected pickHost(hosts: string[]): string {
+    // TODO: update pick up algorithm
     return hosts[_.random(0, hosts.length - 1)];
   }
   private getPath(name: string): string {
