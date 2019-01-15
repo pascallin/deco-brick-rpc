@@ -100,7 +100,10 @@ export class GrpcServer {
   }
 
   private listen() {
-    this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+    const result = this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+    if (result === 0) {
+      throw new Error("Failed to bind port");
+    }
     if (this.discovery) {
       this.discovery.register(this.packageName, `${this.host}:${this.port}`);
     }
