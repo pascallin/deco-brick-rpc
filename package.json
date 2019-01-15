@@ -1,6 +1,6 @@
 {
   "name": "deco-brick-rpc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "a decorator style rpc micro-service",
   "main": "index.js",
   "scripts": {
@@ -19,14 +19,16 @@
   "dependencies": {
     "@grpc/grpc-js": "^0.2.0",
     "@grpc/proto-loader": "^0.3.0",
-    "@types/koa": "^2.0.46",
     "chalk": "^2.4.1",
-    "grpc": "^1.13.0",
+    "grpc": "^1.17.0",
     "grpc-promise": "^1.1.0",
-    "koa": "^2.5.2",
     "lodash": "^4.17.10",
     "node-etcd": "^5.1.0",
     "protobufjs": "^6.8.6",
     "thrift": "^0.11.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.46",
+    "koa": "^2.6.2"
   }
 }
