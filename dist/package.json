@@ -1,10 +1,11 @@
 {
   "name": "deco-brick-rpc",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "a decorator style rpc micro-service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
