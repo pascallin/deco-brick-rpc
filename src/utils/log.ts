@@ -18,6 +18,10 @@ export class Log {
   public green(message: string): void {
     cl(chalk.greenBright(this.wrapMessage(message)));
   }
+  public error(err: Error): void {
+    // tslint:disable-next-line:no-console
+    console.error(err.stack);
+  }
   private wrapMessage(message: string): string {
     return `[${this.name}]: ${message}`;
   }

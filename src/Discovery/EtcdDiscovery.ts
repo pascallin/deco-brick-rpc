@@ -58,6 +58,11 @@ export class EtcdDiscovery implements IDiscovery {
   public discover(name: string): {[key: string]: any} {
     const service = this.etcd.getSync(this.getPath(name));
     let data: string[] = [];
+    if (service.err) {
+      log("EtcdDiscovery").red(`service name ${name} not found! [node-etcd package] Error: `);
+      log("node-etcd package").error(service.err);
+      return { host: "", port: 0 };
+    }
     try {
       data = JSON.parse(service.body.node.value).uri;
     } catch (e) {

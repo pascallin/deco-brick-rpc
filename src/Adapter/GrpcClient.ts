@@ -1,4 +1,3 @@
-// import { loadPackageDefinition } from "@grpc/grpc-js";
 import protoLoader = require("@grpc/proto-loader");
 
 import grpc = require("grpc");
@@ -24,35 +23,25 @@ export class GrpcClient {
 
   constructor(config: IBrickRpcClientConfig) {
     this.protoPath = config.protoPath;
-    this.loadProto();
     if (config.discovery) {
+
       this.discovery = config.discovery;
-      this.discoveryReload();
-      const self = this;
-      /**
-       * TODO:
-       * There is a BUG here.
-       * Assertion failed:
-       *  (handle->type == UV_TCP || handle->type == UV_TTY || handle->type == UV_NAMED_PIPE),
-       *  function uv___stream_fd, file ../deps/uv/src/unix/stream.c, line 1620.
-       * Abort trap: 6
-       */
-      // this.discovery.watch(this.packageName, (data: {[key: string]: any}) => {
-      //   log("BrickGrpcClient").yellow(`Discovery reload service ${self.packageName}`);
-      //   self.discoveryReload.apply(self);
-      // });
-    } else {
-      if (!config.host || !config.port) {
+    }
+    if (!config.discovery && (!config.host || !config.port)) {
         throw new Error("Missing config parameters: discovery | host,port ");
       }
-      this.connect(config.host, config.port);
-    }
+    this.host = config.host;
+    this.port = config.port;
+
+    this.run().then(() => {
+      log("BrickGrpcClient").green(`grpc client is running`);
+    }).catch(log("BrickGrpcClient").error);
   }
 
   public connect(host: string, port: number) {
     this.host = host;
     this.port = port;
-    this.loadServices();
+    this.run();
   }
 
   public rpc(): any {
@@ -71,14 +60,6 @@ export class GrpcClient {
     });
     const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
     this.protos = protoDescriptor;
-    this.loadPackageName();
-  }
-
-  public discoveryReload(): void {
-    if (this.discovery) {
-      const { host, port } = this.discovery.discover(this.packageName);
-      this.connect(host, port);
-    }
   }
 
   private loadPackageName() {
@@ -89,25 +70,72 @@ export class GrpcClient {
     }
   }
 
-  private loadServices() {
-    // TODO: clean client for discovery
-    // for (const i in this.client) {
-    //   if (this.client[i]) {
-    //     this.client[i].close();
-    //     delete this.client[i];
-    //   }
-    // }
+  private loadServices(host: string, port: number) {
     for (const i in this.protos) {
       if (this.protos[i]) {
         for (const serviceName in this.protos[i]) {
           if (this.protos[i][serviceName]) {
             const client = new this.protos[i][serviceName](
-              `${this.host}:${this.port}`, grpc.credentials.createInsecure());
+              `${host}:${port}`, grpc.credentials.createInsecure());
             grpcPromise.promisifyAll(client);
             this.client[serviceName] = client;
           }
         }
         log("BrickGrpcClient").blue(`Loaded grpc client: ${this.packageName}`);
+      }
+    }
+  }
+
+  private async closeAllServiceClient(): Promise<any> {
+    for (const i in this.protos) {
+      if (this.protos[i]) {
+        for (const serviceName in this.protos[i]) {
+          if (this.protos[i][serviceName]) {
+            if (this.client[serviceName]) {
+              grpc.closeClient(this.client[serviceName]);
+              // this.client[serviceName].close();
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private discoveryReload(): void {
+    if (this.discovery) {
+      // close connected client
+      // this.closeAllServiceClient();
+      const { host, port } = this.discovery.discover(this.packageName);
+      if (port > 0) {
+        this.closeAllServiceClient().then(() => {
+          this.loadServices(host, port);
+        });
+      }
+    }
+  }
+
+  private async run() {
+    log("BrickGrpcClient").yellow(`start running...`);
+    this.loadProto();
+    this.loadPackageName();
+    if (this.discovery) {
+      this.discoveryReload();
+      /**
+       * TODO:
+       * When connected rpc server is down and ready to switch,
+       * There is a BUG here.
+       * Assertion failed:
+       *  (handle->type == UV_TCP || handle->type == UV_TTY || handle->type == UV_NAMED_PIPE),
+       *  function uv___stream_fd, file ../deps/uv/src/unix/stream.c, line 1620.
+       * Abort trap: 6
+       */
+      this.discovery.watch(this.packageName, () => {
+        log("BrickGrpcClient").yellow(`Discovery reload service ${this.packageName}`);
+        this.discoveryReload();
+      });
+    } else {
+      if (this.host && this.port) {
+        this.loadServices(this.host, this.port);
       }
     }
   }

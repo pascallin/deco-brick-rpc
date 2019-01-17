@@ -51,6 +51,11 @@ class EtcdDiscovery {
     discover(name) {
         const service = this.etcd.getSync(this.getPath(name));
         let data = [];
+        if (service.err) {
+            log_1.default("EtcdDiscovery").red(`service name ${name} not found! [node-etcd package] Error: `);
+            log_1.default("node-etcd package").error(service.err);
+            return { host: "", port: 0 };
+        }
         try {
             data = JSON.parse(service.body.node.value).uri;
         }
