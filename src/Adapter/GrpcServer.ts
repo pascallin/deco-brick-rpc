@@ -15,7 +15,7 @@ export class GrpcServer {
   protected Services: any[] = [];
   protected server: any = new grpc.Server();
   private packageName: string = "";
-  private host: string = "0.0.0.0";
+  private host: string = "";
   private port: number;
   private protoPath: string;
   private protos: any;
@@ -100,7 +100,7 @@ export class GrpcServer {
   }
 
   private listen() {
-    const result = this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+    const result = this.server.bind(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure());
     if (result === 0) {
       throw new Error("Failed to bind port");
     }

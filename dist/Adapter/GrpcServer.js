@@ -12,7 +12,7 @@ class GrpcServer {
         this.Services = [];
         this.server = new grpc.Server();
         this.packageName = "";
-        this.host = "0.0.0.0";
+        this.host = "";
         if (config.host) {
             this.host = config.host;
         }
@@ -84,7 +84,7 @@ class GrpcServer {
         };
     }
     listen() {
-        const result = this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+        const result = this.server.bind(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure());
         if (result === 0) {
             throw new Error("Failed to bind port");
         }
