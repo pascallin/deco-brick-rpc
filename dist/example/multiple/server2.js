@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../../");
+const __1 = require("../../");
 class TestService {
     constructor() {
         this.name = "Test";
@@ -19,8 +19,8 @@ class TestService {
         });
     }
 }
-const test = new _1.GrpcServer({
-    discovery: new _1.EtcdDiscovery({
+const test = new __1.GrpcServer({
+    discovery: new __1.EtcdDiscovery({
         namespace: "deco",
         url: "localhost:2379",
     }),

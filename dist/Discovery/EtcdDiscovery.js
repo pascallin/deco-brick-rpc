@@ -16,13 +16,15 @@ class EtcdDiscovery {
     register(name, uri) {
         const path = this.getPath(name);
         // format: { uri: [ 'host:port' ] }
-        let newData = { uri: [uri] };
+        const newData = { uri: [uri] };
         // push uri to the exist service array
         const res = this.etcd.getSync(path);
         if (!res.err) {
             const oldData = JSON.parse(res.body.node.value);
             oldData.uri.push(uri);
-            newData = oldData;
+            // unique array
+            newData.uri =
+                oldData.uri.reduce((prev, curr) => prev.indexOf(curr) > -1 ? prev : [...prev, curr], []);
         }
         // set etcd key-value
         this.etcd.setSync(path, JSON.stringify(newData));
@@ -39,15 +41,9 @@ class EtcdDiscovery {
                 log_1.default("EtcdDiscovery").red(`${name} unregistered`);
             }
             else {
-                const newData = [];
-                for (const i in oldData.uri) {
-                    if (oldData.uri[i]) {
-                        if (oldData.uri[i] !== uri) {
-                            newData.push(oldData.uri[i]);
-                        }
-                    }
-                }
-                this.etcd.setSync(path, JSON.stringify({ uri: newData }));
+                const newData = { uri: [] };
+                newData.uri = oldData.uri.filter((v) => v !== uri);
+                this.etcd.setSync(path, JSON.stringify(newData));
                 log_1.default("EtcdDiscovery").red(`${name} unregistered`);
             }
         }
@@ -55,6 +51,11 @@ class EtcdDiscovery {
     discover(name) {
         const service = this.etcd.getSync(this.getPath(name));
         let data = [];
+        if (service.err) {
+            log_1.default("EtcdDiscovery").red(`service name ${name} not found! [node-etcd package] Error: `);
+            log_1.default("node-etcd package").error(service.err);
+            return { host: "", port: 0 };
+        }
         try {
             data = JSON.parse(service.body.node.value).uri;
         }
@@ -70,6 +71,7 @@ class EtcdDiscovery {
         watcher.on("change", call);
     }
     pickHost(hosts) {
+        // TODO: update pick up algorithm
         return hosts[lodash_1.default.random(0, hosts.length - 1)];
     }
     getPath(name) {

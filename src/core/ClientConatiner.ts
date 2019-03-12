@@ -3,7 +3,7 @@ import path from "path";
 import { GrpcClient } from "../Adapter/GrpcClient";
 import { IDiscovery } from "../Discovery/DiscoveryInterface";
 
-interface IClientConatinerConfig {
+export interface IClientConatinerConfig {
   discovery: IDiscovery;
   protoDirPath: string;
 }

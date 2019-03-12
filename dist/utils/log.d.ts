@@ -5,6 +5,7 @@ export declare class Log {
     blue(message: string): void;
     yellow(message: string): void;
     green(message: string): void;
-    private wrapMessage(message);
+    error(err: Error): void;
+    private wrapMessage;
 }
 export default function log(name: string): Log;

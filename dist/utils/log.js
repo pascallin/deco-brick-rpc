@@ -21,6 +21,10 @@ class Log {
     green(message) {
         cl(chalk_1.default.greenBright(this.wrapMessage(message)));
     }
+    error(err) {
+        // tslint:disable-next-line:no-console
+        console.error(err.stack);
+    }
     wrapMessage(message) {
         return `[${this.name}]: ${message}`;
     }

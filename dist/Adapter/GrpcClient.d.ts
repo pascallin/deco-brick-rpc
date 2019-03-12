@@ -19,7 +19,9 @@ export declare class GrpcClient {
     connect(host: string, port: number): void;
     rpc(): any;
     loadProto(): void;
-    discoveryReload(): void;
-    private loadPackageName();
-    private loadServices();
+    private loadPackageName;
+    private loadServices;
+    private closeAllServiceClient;
+    private discoveryReload;
+    private run;
 }

@@ -10,7 +10,7 @@ There are `GrpcServer`，`IBrickService`，`GrpcClient`，`EtcdDiscovery`，`Cli
 ### server config 
 ```
 {
-  host: HOST
+  host: HOST // optional, register host for EtcdDiscovery
   port: PORT,
   protoPath: PROTOPATH,
   discovery: // optional, a EtcdDiscovery class object

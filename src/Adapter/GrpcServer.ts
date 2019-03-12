@@ -15,7 +15,7 @@ export class GrpcServer {
   protected Services: any[] = [];
   protected server: any = new grpc.Server();
   private packageName: string = "";
-  private host: string = "0.0.0.0";
+  private host: string = "";
   private port: number;
   private protoPath: string;
   private protos: any;
@@ -92,13 +92,18 @@ export class GrpcServer {
       const result = fn(call.request).then((data: any) => {
         callback(null, data);
       }).catch((e: any) => {
+        // tslint:disable-next-line:no-console
+        console.error(e.stack);
         callback(e);
       });
     };
   }
 
   private listen() {
-    this.server.bind(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure());
+    const result = this.server.bind(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure());
+    if (result === 0) {
+      throw new Error("Failed to bind port");
+    }
     if (this.discovery) {
       this.discovery.register(this.packageName, `${this.host}:${this.port}`);
     }
