@@ -1,9 +1,9 @@
 {
   "name": "deco-brick-rpc",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "a decorator style rpc micro-service",
   "main": "index.js",
-  "files": ["Adapter", "core", "Discovery", "example", "utils"],
+  "files": ["Adapter", "core", "Discovery", "example", "utils", "index.d.ts"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc --watch"
